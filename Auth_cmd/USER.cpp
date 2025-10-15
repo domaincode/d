@@ -3,7 +3,7 @@
 
 void Client::UserCommand(std::vector<std::string> command)
 {
-    if (command.size() < 5 || command[4][0] != ':')
+    if (command.size() < 5)
     {
         sendReply(ERR_NEEDMOREPARAMS(_nickname, _hostname, "USER"));
         return;
@@ -29,18 +29,10 @@ void Client::UserCommand(std::vector<std::string> command)
         }
     }
 
-    // currClient.setUsername(username);
-    // currClient.setServername(servername);
-    // currClient.setRealname(realname);
-    // currClient.setRegistered(true);
-    // currClient.setClientFd(client_fd);
-    // currClient.setAuthStatus(0x04);
-
     _username = username;
     _servername = servername;
     _fullname = fullname;
     _registered = true;
-    // ???? set authstatus _authstatus |= new_authstatus
     _authStatus |= 0x04;
 
     if (_authStatus == 0x07)

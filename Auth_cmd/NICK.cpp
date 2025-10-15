@@ -3,8 +3,6 @@
 
 void Client::broadcastNickChange(const std::string &oldNick, const std::string &newNick)
 {
-
-    
     std::string message = ":" + oldNick + "!" + Get_username() + "@" + Get_hostname() + " NICK :" + newNick + "\r\n";
 
     for (std::map<int, Client>::iterator it = _server->Get_clients_array().begin(); it != _server->Get_clients_array().end(); ++it)
@@ -13,6 +11,8 @@ void Client::broadcastNickChange(const std::string &oldNick, const std::string &
 
 bool isValidNickname(std::string nickname)
 {
+    if(nickname[0] == '-')
+        return false;
     for (size_t i = 0; i < nickname.size(); i++)
     {
         if (!isalnum(nickname[i]) && nickname[i] != '_' && nickname[i] != '-')
@@ -49,9 +49,7 @@ void Client::NickCommand(std::vector<std::string> command, Server& server)
     }
 
     std::string oldNick = Get_nickname();
-
-    //currClient.setAuthStatus(0x02);
-    Get_authStatus() |= 0x02;
+    Get_authStatus() |= 0x02;    
 
     //currClient.setNickname(nickname);
     Get_nickname() = nickname;
@@ -59,7 +57,6 @@ void Client::NickCommand(std::vector<std::string> command, Server& server)
     if (Get_authStatus() == 0x07 && Get_nickFlag() == 0)
     {
         sendWelcomeMessages();
-        //currClient.setNickFlag(1);
         Get_nickFlag() = 1;
    }
 

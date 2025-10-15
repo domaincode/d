@@ -1,27 +1,11 @@
 #include "Server.hpp"
 
-#define TES 4
 
-void test()
-{
-    int bytes;
-        char buffer[4];
-    bytes = read(0, buffer, 4);
-    buffer[bytes] = 0;
-    std::string str = "kamal ";
-
-
-
-    // str.append(buffer, 4);
-    // std::cout << str << std::endl;
-    // std::cout << str << std::endl;
-}
 
 
 int main(int argc, char** argv)
 {
 
-   //test();
 
     if(argc != 2)
     {

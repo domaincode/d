@@ -23,11 +23,6 @@ bool Client::isFullyAuthenticated()
     return (_authStatus & 0x07) == 0x07;
 }
 
-int& Client::get_auth_level()
-{
-    return authenticate_level;
-}
-
 
 std::string& Client::Get_nickname()
 {

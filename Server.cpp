@@ -127,10 +127,9 @@ void Server::Accept_NewClient()
 
 void Server::Handle_ClientRequest(Client& client)
 {
-     char buffer[BUFFER_SIZE];
+     char buffer[BUFFER_SIZE + 1];
     int bytes_read = recv(client.Get_fd(), buffer, BUFFER_SIZE, 0);
-    //  int bytes_read = read(client.Get_fd(), buffer, BUFFER_SIZE);
-        std::cout << "bytes read: " << bytes_read << std::endl;
+    std::cout << "bytes read: " << bytes_read << std::endl;
 
     if (bytes_read <= 0)
     {
@@ -142,50 +141,18 @@ void Server::Handle_ClientRequest(Client& client)
     }
     else
     {
-        //from kamal
-        // ??? check again; try to read just 2 bytes from socket that may have more data
-
-
-        // if(bytes_read > BUFFER_SIZE)
-        //     exit(1);
-        // if (bytes_read == BUFFER_SIZE)
-        //     buffer[BUFFER_SIZE - 1] = '\0';
-        // else
-
-            client.Get_buffer() = "Hello";
-            std::cout << "Buffer before: " << client.Get_buffer() << "." << std::endl;
-
-
-            buffer[bytes_read] = '\0';
-
-            // std::cout << "Message Recived:." << buffer << "." << std::endl;
-
-                std::cout << "Buffer after: " << client.Get_buffer() << "." << std::endl;
-
+        buffer[bytes_read] = 0;
         client.Get_buffer().append(buffer, bytes_read);
-        std::cout << "Buffer after: " << client.Get_buffer() << "." << std::endl;
-
-        //client.Get_buffer() = "kamal";
-
-        //client.Get_buffer().erase(std::remove(client.Get_buffer().begin(), client.Get_buffer().end(), '\x04'), client.Get_buffer().end());
-
         size_t pos;
         while (((pos = client.Get_buffer().find("\r\n")) != std::string::npos) || ((pos = client.Get_buffer().find("\n")) != std::string::npos))
         {
-            std::cout << "-------------------------------ENTER\n";
-
-            if (client.Get_buffer().empty())
-                {
-                    std::cout << "Its empty ====================================???\n";
-                    break;
-                }
-            std::string command_str = client.Get_buffer().substr(0, pos + 2);
+            //std::string command_str = client.Get_buffer().substr(0, pos + 2);
+            std::string command_str = client.Get_buffer();
             client.Get_buffer().erase(0, pos + 2);
             std::vector<std::string> command = split(trimString(command_str), ' ');
-            if (command.size() < 1)
-                continue;
-            
-                std::cout << GREEN << "Received: " << RESET << command_str;
+
+            std::cout << GREEN << "Received: " << RESET << command_str;
+
             if (command[0] == "PASS")
                 client.PassCommand(command, *this);
             else if (command[0] == "NICK")

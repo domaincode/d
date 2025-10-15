@@ -1,7 +1,17 @@
 #include "Client.hpp"
 // #include "Server.hpp"
 
-Client::Client(){   std::cout << "Default Constructor Client Called\n";}
+Client::Client()
+{
+    char hostname[100];
+    std::cout << "Default Constructor Client Called\n";
+    if(gethostname(hostname, 100) < 0)
+        _hostname = "localhost";
+    else
+        _hostname = hostname;
+
+
+}
 
 Client::~Client(){ std::cout << "Destructor Client Called\n";}
     
@@ -12,7 +22,8 @@ Client::Client(int fd,  Server* server)
     this->_fd = fd;
     this->_server = server;
     this->is_authenticated = false;
-    this->authenticate_level = 0;
+    _authStatus = 0;
+    _nickFlag = 0;
 }
 
 
@@ -20,11 +31,6 @@ Client::Client(const Client& other)
 {
     std::cout << "Copy constructor Client Called\n";
     *this = other;
-}
-
-void Client::Set_buffer(std::string msg)
-{
-    _buffer = msg;
 }
 
 
@@ -37,11 +43,11 @@ Client& Client::operator=(const Client& other)
     {
         return *this;
     }
-    this->_fd = other._fd;
-    this->_server = other._server;
-    this->is_authenticated = other.is_authenticated;
-    this->authenticate_level = other.authenticate_level;
-
+    _fd = other._fd;
+    _server = other._server;
+    is_authenticated = other.is_authenticated;
+    _authStatus = other._authStatus;
+    _nickFlag = other._nickFlag;
     return *this;
 }
 

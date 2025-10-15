@@ -11,7 +11,7 @@
 
 #include "Replies_MSG.hpp"
 
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 512
 #define GREEN "\033[1;32m"
 #define RESET "\033[0m"
 
@@ -23,8 +23,6 @@ class Client
         Server* _server;
         bool is_authenticated;
 
-
-        int authenticate_level;
         int _fd;
         std::string _ip;
         std::string _hostname;
@@ -57,7 +55,6 @@ class Client
         std::string& Get_buffer();
         std::string& Get_ip();
         int& Get_fd();
-        int& get_auth_level();
         bool isFullyAuthenticated();
         std::string& Get_nickname();
         std::string& Get_username();
@@ -67,9 +64,6 @@ class Client
         int& Get_nickFlag();
 
         Server& Get_serverObject();
-
-        void Set_buffer(std::string msg);
-
 
 
         //Auth commands
