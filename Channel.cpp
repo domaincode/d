@@ -18,6 +18,8 @@ Channel::Channel(std::string& Channel_name, std::string& key)
     _key = key;
     _inviteOnly = false;
     _topicLock = false;
+    _userLimit = 0;
+    _creationDate = getCurrTime();
 
     std::cout << "Channel ARGS Constructor Called\n";
 }
@@ -45,29 +47,14 @@ void Channel::removeOperator(int& client_fd)
 	// it = _operators.find(client_fd);
 	// if (it != _operators.end())
 	// 	_operators.erase(it);
-
-    if(_operators.empty() == true)
-        return;
-    if(_operators.size() == 1)
+    if(_operators.size() != 1)
     {
-        _operators.pop_back();
-        return ;
-    }
-    else
-    {
-        //must be checked
         std::vector<int>::iterator it;
-        std::vector<int>::iterator tmp;
         it = std::find(_operators.begin(), _operators.end(), client_fd);
-        tmp = _operators.end();
-        tmp--;
-        if(it != _operators.end() && tmp != it)
-        {
-            std::cout << "enter to tmp != it\n";
-            std::swap(*it, *tmp);
-            _operators.pop_back();
-        }
+        std::swap(*it, *(_operators.end()--));
     }
+    _operators.pop_back();
+
 }
 
 bool Channel::removeClientFromChannel(int client_fd)

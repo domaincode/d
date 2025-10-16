@@ -1,5 +1,17 @@
 #include "Server.hpp"
 
+// void Server::cleanup()
+// {
+//     for (int i = 1; i < _client_count; i++)
+//         removeClient(fds[i].fd);
+
+//     if (_server_fd != -1)
+//         close(_server_fd);
+
+//     _clients.clear();
+//     _channels.clear();
+// }
+
 
 Server& Client::Get_serverObject()
 {
@@ -49,4 +61,42 @@ int Server::Get_ClientFdByName(const std::string &nickname)
             return it->first;
     }
     return -1;
+}
+
+
+void Server::removeClient(int client_fd)
+{
+    std::map<int, Client>::iterator client_it = _clients.find(client_fd);
+    if (client_it == _clients.end())
+        return;
+
+    for (std::map<std::string, Channel>::iterator it_chan = _channels.begin(); it_chan != _channels.end();)
+    {
+        if (it_chan->second.isClientInChannel(client_fd))
+        {
+            it_chan->second.removeClientFromChannel(client_fd);
+            std::string message = RPL_KICK(client_it->second.Get_nickname(), client_it->second.Get_hostname(), client_it->second.Get_hostname(), client_it->second.Get_nickname(), it_chan->second.Get_name(), "");
+            it_chan->second.broadcastMessage(message, _clients);
+        }
+
+        if (it_chan->second.Get_users().empty())
+            it_chan = _channels.erase(it_chan);
+        else
+            ++it_chan;
+    }
+
+    close(client_fd);
+    _clients.erase(client_it);
+
+    for (int i = 1; i < _fds.size(); i++)
+    {
+        if (_fds[i].fd == client_fd)
+        {
+  //         _fds[i].fd *= -1;
+            if(_fds.size() > 2)
+                std::swap(_fds[i], *(_fds.end()--));
+            _fds.pop_back();
+            break;
+        }
+    }
 }

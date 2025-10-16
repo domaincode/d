@@ -13,11 +13,11 @@
 void Server::broadcastToChannel(Client &client, const std::string &channel_name, const std::string &message)
 {
     std::map<std::string, Channel>::iterator channel_it = _channels.find(channel_name);
-    if (channel_it == _channels.end())
-    {
-        client.sendReply(ERR_NOSUCHCHANNEL(client.Get_hostname(), client.Get_nickname(), channel_name));
-        return;
-    }
+    // if (channel_it == _channels.end())
+    // {
+    //     client.sendReply(ERR_NOSUCHCHANNEL(client.Get_hostname(), client.Get_nickname(), channel_name));
+    //     return;
+    // }
 
     Channel &channel = channel_it->second;
     std::vector<int> &clients_in_channel = channel.Get_users();
@@ -81,7 +81,7 @@ void Server::PrivMsgCommand(Client &client, std::vector<std::string> command, st
             std::vector<std::string> bots_msg;
             bots_msg.push_back("SECBOT");
             bots_msg.push_back(message);
-           // BotCommand(client.Get_fd(), bots_msg);
+            BotCommand(client.Get_fd(), bots_msg);
         }
 
         else if (target[0] == '#' || target[0] == '&')

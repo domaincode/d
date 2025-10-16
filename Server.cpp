@@ -5,11 +5,16 @@ Server::~Server()
     std::cout << "Server Destructor Called\n";
 }
 
-Server::Server(int port)
+Server::Server(int port, std::string pass)
 {
     std::cout << "Server Constructor Called\n";
     this->_port = port;
-    this->_password = "123";
+    this->_password = pass;
+    char hostBuffer[256];
+    if (gethostname(hostBuffer, sizeof(hostBuffer)) == 0)
+        _hostname = hostBuffer;
+    else
+        _hostname = "localhost";
 }
 
 void Server::Start()
@@ -30,6 +35,14 @@ void Server::Start()
     //// Back log find the best value ????
     std::cout << "Listen: " ;
     std::cout << (listen(listen_fd, 2) < 0 ? "Failed\n": "Success\n");
+    
+    pollfd fd;
+    memset(&fd, 0, sizeof(fd));
+    fd.events = POLLIN;
+    fd.fd = listen_fd;
+    _fds.push_back(fd);
+    // launchBOT();
+
     Use_Poll();
 
 }
@@ -37,12 +50,6 @@ void Server::Start()
 void Server::Use_Poll()
 {
     int j;
-
-    pollfd fd;
-    memset(&fd, 0, sizeof(fd));
-    fd.events = POLLIN;
-    fd.fd = listen_fd;
-    _fds.push_back(fd);
   
     while(true)
     {
@@ -94,12 +101,14 @@ void Server::Check_IandO()
 void Server::Accept_NewClient()
 {
         //New Client in the queue ???
+        sockaddr_in clientAddress;
+        socklen_t Address_size = sizeof(clientAddress);
         pollfd fd;
         memset(&fd, 0, sizeof(fd));
         fd.events = POLLIN;
         //POLLIN
 
-        fd.fd = accept(listen_fd, NULL, NULL);
+        fd.fd = accept(listen_fd, (sockaddr* )&clientAddress, &Address_size);
         std::cout << "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\Accept: " << fd.fd << " is connecting.\n";
         if(fd.fd < 0)
         {
@@ -115,6 +124,7 @@ void Server::Accept_NewClient()
         Client new_client(fd.fd, this);
 
         // Client must have Default Constructor
+        new_client.Get_ip() = inet_ntoa(clientAddress.sin_addr);
         _clients[fd.fd] = new_client;
          std::cout << "Server have: " << _clients.size() << " Clients."<< std::endl;
       
@@ -131,12 +141,10 @@ void Server::Handle_ClientRequest(Client& client)
     int bytes_read = recv(client.Get_fd(), buffer, BUFFER_SIZE, 0);
     std::cout << "bytes read: " << bytes_read << std::endl;
 
-    if (bytes_read <= 0)
+    if (bytes_read == 0)
     {
         std::cout << "Client disconnected." << std::endl;
-        exit(0);
-        // ??? must be devlopped
-        //this->removeClient(client_fd);
+        removeClient(client.Get_fd());
         return;
     }
     else
@@ -161,7 +169,6 @@ void Server::Handle_ClientRequest(Client& client)
                 client.UserCommand(command);
             else if (client.isFullyAuthenticated())
             {
-                std::cout << "Is Fully Autenticated\n";
                 if (command[0] == "JOIN")
                    ChannelJoin(client, command);
                 else if (command[0] == "MODE")
@@ -174,8 +181,8 @@ void Server::Handle_ClientRequest(Client& client)
                     channelInvite(client, command);
                 else if (command[0] == "PRIVMSG")
                     PrivMsgCommand(client, command, command_str);
-                // else if (command[0] == "SECBOT")
-                //     BotCommand(client_fd, command);
+                else if (command[0] == "SECBOT")
+                    BotCommand(client.Get_fd(), command);
             }
 
 

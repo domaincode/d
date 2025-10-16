@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include <poll.h>
+#include <exception>
 
 
 
@@ -37,7 +38,7 @@ class Server
 
 
     public:
-        Server(int port);
+        Server(int port, std::string pass);
         ~Server();
         void Start();
 
@@ -50,6 +51,9 @@ class Server
         void Check_IandO();
         void Accept_NewClient();
         void Handle_ClientRequest(Client& client);
+        void removeClient(int client_fd);
+        void launchBOT();
+        // void cleanup();
 
 
         //channel commands
@@ -82,9 +86,6 @@ class Server
 
         void broadcastModeChange(Client &currClient, Channel &currChannel, const std::string &mode, std::string parameter);
         void oModeParam(Channel &currChannel, std::string &parameter, std::string &mode, Client &currClient);
-        
-
-
 
         void sendChannelInfo(Client &currClient, Channel &currChannel);
         void channelMode(Client &currClient, std::vector<std::string> command);
@@ -94,6 +95,8 @@ class Server
 
         bool Nick_isDuplicated(std::string& Nickname);
         void print_clients();
+
+        void BotCommand(int client_fd, std::vector<std::string> command);
 
 };
 

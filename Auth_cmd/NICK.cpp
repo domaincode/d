@@ -50,8 +50,6 @@ void Client::NickCommand(std::vector<std::string> command, Server& server)
 
     std::string oldNick = Get_nickname();
     Get_authStatus() |= 0x02;    
-
-    //currClient.setNickname(nickname);
     Get_nickname() = nickname;
 
     if (Get_authStatus() == 0x07 && Get_nickFlag() == 0)

@@ -44,7 +44,6 @@ bool isValidNumber(const std::string &number)
 
 std::vector<std::string> parseModes(const std::string &modes)
 {
-    
     std::vector<std::string> result;
     bool give = true;
     for (size_t i = 0; i < modes.size(); i++)

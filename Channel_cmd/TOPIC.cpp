@@ -2,7 +2,7 @@
 
 std::string getTopic(std::vector<std::string> command)
 {
-    std::string result = "";
+    std::string result;
     for (size_t i = 2; i < command.size(); i++)
     {
         if (i > 2)

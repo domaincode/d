@@ -33,7 +33,7 @@ class Client
 
         int _authStatus;
         int _nickFlag;
-        bool _registered;
+        //bool _registered;
 
 
         

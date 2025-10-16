@@ -2,8 +2,10 @@
 
 std::string getReason(const std::vector<std::string> &command)
 {
+
     if (command.size() < 3)
     {
+        //????????????? must be command.size() == 3
         return "";
     }
     std::string result;
@@ -15,6 +17,7 @@ std::string getReason(const std::vector<std::string> &command)
         }
         result += command[i];
     }
+    ///result empty ??? 
     if (!result.empty() && result[0] == ':')
     {
         result = result.substr(1);
@@ -89,8 +92,9 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
         return;
     }
 
-    if (!currChannel.removeClientFromChannel(targetClient->Get_fd()))
-        return;
+    // if (!currChannel.removeClientFromChannel(targetClient->Get_fd()))
+    //     return;
+    currChannel.removeClientFromChannel(targetClient->Get_fd());
 
     std::string message = RPL_KICK(currClient.Get_nickname(), currClient.Get_hostname(), currClient.Get_hostname(), nickname, channelName, reason);
     currChannel.broadcastMessage(message, _clients);

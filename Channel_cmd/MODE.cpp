@@ -138,12 +138,13 @@ void Server::channelMode(Client &currClient, std::vector<std::string> command)
 
     std::vector<std::string> modes;
     //if ri zayda
-    if (command.size() >= 3)
-    {
+    // if (command.size() >= 3)
+    // {
+    // MODE #TESTO +i +t
         if (command[2][0] != '+' && command[2][0] != '-')
             return;
         modes = parseModes(command[2]);
-    }
+    // }
     
     std::vector<std::string> parameters = parseParametres(command, modes);
     if (allParamEmpty(parameters, modes))

@@ -1,5 +1,37 @@
 #include "Server.hpp"
 
+void Server::launchBOT()
+{
+    int bot_fd = socket(AF_INET, SOCK_STREAM | O_NONBLOCK, 0);
+
+    if (bot_fd < 0)
+    {
+        return;
+    }
+
+    if (connect(bot_fd, (struct sockaddr *)&sAddress, sizeof(sAddress)) < 0)
+    {
+        close(bot_fd);
+        return;
+    }
+
+    Client botClient(bot_fd, this);
+
+    botClient.Get_nickname() = "SECBOT";
+    botClient.Get_username() = "SECBOT";
+    botClient.Get_ip() = _hostname;
+    botClient.Get_fullname() = "SECBOT";
+    botClient.Get_authStatus() = 0x07;
+
+    _clients[bot_fd] = botClient;
+    pollfd fd;
+    memset(&fd, 0, sizeof(fd));
+    fd.events = POLLIN;
+    fd.fd = bot_fd;
+    _fds.push_back(fd);
+
+}
+
 void webPath(Client &client, int client_fd, std::string server_hostname)
 {
     std::string sender = "SECBOT";
@@ -98,8 +130,8 @@ void webPath(Client &client, int client_fd, std::string server_hostname)
     for (size_t i = 0; i < numMessages; ++i)
     {
         std::string line = messages[i];
-        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.getNickname(), line + "\r\n");
-        sendReply(client_fd, formatted_msg);
+        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.Get_nickname(), line + "\r\n");
+        client.sendReply(formatted_msg);
     }
 }
 
@@ -211,7 +243,7 @@ void forPath(Client &client, int client_fd, std::string server_hostname)
     {
         std::string line = messages[i];
         std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.Get_nickname(), line + "\r\n");
-        sendReply(client_fd, formatted_msg);
+        client.sendReply(formatted_msg);
     }
 }
 
@@ -301,8 +333,8 @@ void pwnPath(Client client, int client_fd, std::string server_hostname)
     for (size_t i = 0; i < numMessages; ++i)
     {
         std::string line = messages[i];
-        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.getNickname(), line + "\r\n");
-        sendReply(client_fd, formatted_msg);
+        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.Get_nickname(), line + "\r\n");
+        client.sendReply(formatted_msg);
     }
 }
 
@@ -377,8 +409,8 @@ void windowsPentestPath(Client &client, int client_fd, std::string server_hostna
     for (size_t i = 0; i < numMessages; ++i)
     {
         std::string line = messages[i];
-        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.getNickname(), line + "\r\n");
-        sendReply(client_fd, formatted_msg);
+        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.Get_nickname(), line + "\r\n");
+        client.sendReply(formatted_msg);
     }
 }
 void defaultAnswer(Client &client, int client_fd, std::string server_hostname)
@@ -414,8 +446,8 @@ void defaultAnswer(Client &client, int client_fd, std::string server_hostname)
     for (size_t i = 0; i < numMessages; ++i)
     {
         std::string line = messages[i];
-        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.getNickname(), line + "\r\n");
-        sendReply(client_fd, formatted_msg);
+        std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, server_hostname, client.Get_nickname(), line + "\r\n");
+        client.sendReply(formatted_msg);
     }
 }
 
@@ -456,8 +488,8 @@ void Server::BotCommand(int client_fd, std::vector<std::string> command)
         for (size_t i = 0; i < numMessages; ++i)
         {
             std::string line = messages[i];
-            std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, _hostname, currClient.getNickname(), line + "\r\n");
-            sendReply(client_fd, formatted_msg);
+            std::string formatted_msg = PRIVMSG_FORMAT(sender, sender, _hostname, currClient.Get_nickname(), line + "\r\n");
+            currClient.sendReply(formatted_msg);
         }
         return;
     }
