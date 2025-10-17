@@ -69,7 +69,7 @@ void Server::Use_Poll()
         Check_IandO();
 
         //delete
-        if(_fds.size() == 4)
+        if(_fds.size() == 14)
             break;
 
 }

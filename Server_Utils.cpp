@@ -45,7 +45,7 @@ bool Server::Nick_isDuplicated(std::string& Nickname)
 
 void Server::print_clients()
 {
-    for(int i = 0; i < _clients.size(); i++)
+    for(size_t i = 0; i < _clients.size(); i++)
     {
         std::cout << "Client: " << _clients[_fds[i].fd].Get_fd();
         std::cout << " NICK: " << _clients[_fds[i].fd].Get_nickname() << std::endl;
@@ -70,8 +70,10 @@ void Server::removeClient(int client_fd)
     if (client_it == _clients.end())
         return;
 
+    std::map<std::string, Channel>::iterator tmp;
     for (std::map<std::string, Channel>::iterator it_chan = _channels.begin(); it_chan != _channels.end();)
     {
+        tmp = it_chan;
         if (it_chan->second.isClientInChannel(client_fd))
         {
             it_chan->second.removeClientFromChannel(client_fd);
@@ -80,7 +82,11 @@ void Server::removeClient(int client_fd)
         }
 
         if (it_chan->second.Get_users().empty())
-            it_chan = _channels.erase(it_chan);
+        {
+            tmp++;
+            _channels.erase(it_chan);
+            it_chan = tmp;
+        }
         else
             ++it_chan;
     }
@@ -88,7 +94,7 @@ void Server::removeClient(int client_fd)
     close(client_fd);
     _clients.erase(client_it);
 
-    for (int i = 1; i < _fds.size(); i++)
+    for (size_t i = 1; i < _fds.size(); i++)
     {
         if (_fds[i].fd == client_fd)
         {

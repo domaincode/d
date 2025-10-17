@@ -34,30 +34,35 @@ std::pair<int, std::string> parse_args(char **av)
 
 int main(int argc, char** argv)
 {
-    // std::vector<int>vect;
 
-    // vect.push_back(1);
-    //     vect.push_back(2);
-    // vect.push_back(3);
-    //     vect.push_back(44);
-    //         vect.push_back(50);
+    // std::map<int, std::string> array;
 
-    //         std::vector<int>::iterator it;
-    //     std::vector<int>::iterator tmp;
-    //     it = std::find(vect.begin(), vect.end(), 1);
-    //     tmp = vect.end();
-    //     tmp--;
-    //     if(it != vect.end() && tmp != it)
-    //     {
-    //         std::cout << "enter to tmp != it\n";
-    //         std::swap(*it, *tmp);
-    //        // vect.pop_back();
-    //     }
+    // std::map<int, std::string>::iterator it;
+    // std::map<int, std::string>::iterator tmp;
 
-    //     for(int i = 0; i < vect.size(); i++)
-    //     {
-    //         std::cout << vect[i] << std::endl;
-    //     }
+    // array[1] = "kamal";
+    // array[2] = "test";
+    // array[3] = "Hello world";
+
+    // it = array.find(2);
+    // tmp = it;
+    // tmp++;
+    // array.erase(it);
+
+
+    // if(it == array.end())
+    // {
+    //     std::cout << "END OF MAP\n";
+    // }
+    // std::cout << it->second << std::endl;
+    // std::cout << tmp->second  << std::endl;
+
+    // std::cout << "start\n";
+
+    // for(std::map<int, std::string>::iterator it = array.begin(); it != array.end(); it++)
+    // {   
+    //     std::cout << it->second << std::endl;
+    // }
 
     if (argc != 3)
     {

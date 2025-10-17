@@ -42,7 +42,7 @@ std::map<std::string, std::string> parseJoinCommand(std::vector<std::string> com
 
 void Server::joinCommand(std::string channelName, std::string key, Client &client)
 {
-    int client_fd = client.Get_fd();
+    //int client_fd = client.Get_fd();
     std::map<std::string, Channel>::iterator it;
     it = _channels.find(channelName);
     if (it == _channels.end())

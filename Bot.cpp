@@ -32,7 +32,7 @@ void Server::launchBOT()
 
 }
 
-void webPath(Client &client, int client_fd, std::string server_hostname)
+void webPath(Client &client,std::string server_hostname)
 {
     std::string sender = "SECBOT";
 
@@ -135,7 +135,7 @@ void webPath(Client &client, int client_fd, std::string server_hostname)
     }
 }
 
-void forPath(Client &client, int client_fd, std::string server_hostname)
+void forPath(Client &client,std::string server_hostname)
 {
     std::string sender = "SECBOT";
 
@@ -247,7 +247,7 @@ void forPath(Client &client, int client_fd, std::string server_hostname)
     }
 }
 
-void pwnPath(Client client, int client_fd, std::string server_hostname)
+void pwnPath(Client client, std::string server_hostname)
 {
     std::string sender = "SECBOT";
 
@@ -338,7 +338,7 @@ void pwnPath(Client client, int client_fd, std::string server_hostname)
     }
 }
 
-void windowsPentestPath(Client &client, int client_fd, std::string server_hostname)
+void windowsPentestPath(Client &client, std::string server_hostname)
 {
     std::string sender = "SECBOT";
     const char *messages[] = {
@@ -413,7 +413,7 @@ void windowsPentestPath(Client &client, int client_fd, std::string server_hostna
         client.sendReply(formatted_msg);
     }
 }
-void defaultAnswer(Client &client, int client_fd, std::string server_hostname)
+void defaultAnswer(Client &client,std::string server_hostname)
 {
     std::string sender = "SECBOT";
     const char *messages[] = {
@@ -494,13 +494,13 @@ void Server::BotCommand(int client_fd, std::vector<std::string> command)
         return;
     }
     else if (command[1] == "WEB")
-        webPath(currClient, client_fd, _hostname);
+        webPath(currClient, _hostname);
     else if (command[1] == "FOR")
-        forPath(currClient, client_fd, _hostname);
+        forPath(currClient, _hostname);
     else if (command[1] == "PWN")
-        pwnPath(currClient, client_fd, _hostname);
+        pwnPath(currClient,  _hostname);
     else if (command[1] == "WIN")
-        windowsPentestPath(currClient, client_fd, _hostname);
+        windowsPentestPath(currClient, _hostname);
     else
-        defaultAnswer(currClient, client_fd, _hostname);
+        defaultAnswer(currClient, _hostname);
 }

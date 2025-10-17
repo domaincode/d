@@ -2,7 +2,7 @@
 
 std::string getFromattedCurrTime()
 {
-    std::time_t now = std::time(nullptr);
+    std::time_t now = std::time(NULL);
 
     std::tm local_time = *std::localtime(&now);
 
