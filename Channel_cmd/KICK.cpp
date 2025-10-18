@@ -1,5 +1,6 @@
 #include "../Server.hpp"
 
+
 std::string getReason(const std::vector<std::string> &command)
 {
 
@@ -92,11 +93,13 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
         return;
     }
 
-    // if (!currChannel.removeClientFromChannel(targetClient->Get_fd()))
-    //     return;
-    currChannel.removeClientFromChannel(targetClient->Get_fd());
+    if (!currChannel.removeClientFromChannel(targetClient->Get_fd()))
+        return;
+   // currChannel.removeClientFromChannel(targetClient->Get_fd());
 
     std::string message = RPL_KICK(currClient.Get_nickname(), currClient.Get_hostname(), currClient.Get_hostname(), nickname, channelName, reason);
+
+    targetClient->sendReply(message);
     currChannel.broadcastMessage(message, _clients);
 
     if (currChannel.Get_users().empty())
@@ -112,9 +115,10 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
         {
             int newOperatorFd = clients[0];
             currChannel.addOperator(newOperatorFd);
-            // sendReply(newOperatorFd, RPL_YOUREOPER(_clients[newOperatorFd].getNickname()));
+            //_sendReply(newOperatorFd, RPL_YOUREOPER(_clients[newOperatorFd].Get_nickname()));
 
             _clients[newOperatorFd].sendReply(RPL_YOUREOPER(_clients[newOperatorFd].Get_nickname()));
+           // currChannel.broadcastMessage(RPL_OPERCHANGE(_clients[newOperatorFd].Get_nickname()), _clients);
         }
     }
 }

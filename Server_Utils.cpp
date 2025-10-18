@@ -77,6 +77,8 @@ void Server::removeClient(int client_fd)
         if (it_chan->second.isClientInChannel(client_fd))
         {
             it_chan->second.removeClientFromChannel(client_fd);
+            if(it_chan->second.isOperator(client_fd) == true)
+                it_chan->second.removeOperator(client_fd);
             std::string message = RPL_KICK(client_it->second.Get_nickname(), client_it->second.Get_hostname(), client_it->second.Get_hostname(), client_it->second.Get_nickname(), it_chan->second.Get_name(), "");
             it_chan->second.broadcastMessage(message, _clients);
         }

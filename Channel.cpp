@@ -63,6 +63,8 @@ bool Channel::removeClientFromChannel(int client_fd)
     {
         if (*it == client_fd)
         {
+            if(isOperator(client_fd))
+				removeOperator(client_fd);
             _users.erase(it);
             return true;
         }

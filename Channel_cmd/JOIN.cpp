@@ -98,6 +98,7 @@ void Server::joinCommand(std::string channelName, std::string key, Client &clien
         }
         //////must be removed from the invite only list ???
         currChannel.addClient(client.Get_fd());
+        std::cout << "Client Added: " << client.Get_nickname() << std::endl;
         std::string message = RPL_JOIN(client.Get_nickname(), client.Get_username(), channelName, client.Get_ip());
         currChannel.broadcastMessage(message, _clients);
         if (currChannel.Get_topic() == "")

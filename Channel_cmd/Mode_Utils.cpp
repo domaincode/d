@@ -29,7 +29,7 @@ bool isValidNumber(const std::string &number)
 {
     int start = 0;
 
-    if (number[0] == '+' || number[0] == '-')
+    if (number[0] == '+')
         start = 1;
 
     for (size_t i = start; i < number.size(); i++)

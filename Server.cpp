@@ -29,12 +29,13 @@ void Server::Start()
     sAddress.sin_port = htons(_port);
     sAddress.sin_addr.s_addr = INADDR_ANY;
     
-    std::cout << "Bind: " ;
-    std::cout << (bind(listen_fd, (sockaddr* )&sAddress, sizeof(sAddress)) < 0 ? "Failed\n": "Success\n");
-
-    //// Back log find the best value ????
-    std::cout << "Listen: " ;
-    std::cout << (listen(listen_fd, 2) < 0 ? "Failed\n": "Success\n");
+    int opt = 1;
+    if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+        throw std::runtime_error("Failed to set socket option SO_REUSEADDR");
+    if(bind(listen_fd, (sockaddr* )&sAddress, sizeof(sAddress)) < 0 )
+        throw std::runtime_error("Failed to Bind");
+    if(listen(listen_fd, 100) < 0 )
+        throw std::runtime_error("Failed to Listen");
     
     pollfd fd;
     memset(&fd, 0, sizeof(fd));
@@ -145,18 +146,23 @@ void Server::Handle_ClientRequest(Client& client)
     {
         std::cout << "Client disconnected." << std::endl;
         removeClient(client.Get_fd());
-        return;
     }
     else
     {
+   
+
         buffer[bytes_read] = 0;
         client.Get_buffer().append(buffer, bytes_read);
         size_t pos;
         while (((pos = client.Get_buffer().find("\r\n")) != std::string::npos) || ((pos = client.Get_buffer().find("\n")) != std::string::npos))
         {
-            //std::string command_str = client.Get_buffer().substr(0, pos + 2);
-            std::string command_str = client.Get_buffer();
-            client.Get_buffer().erase(0, pos + 2);
+             size_t delim_len = (client.Get_buffer()[pos] == '\r') ? 2 : 1;
+            std::string command_str = client.Get_buffer().substr(0, pos + delim_len);
+
+            client.Get_buffer().erase(0, pos + delim_len);
+            //std::string command_str = client.Get_buffer();
+            //client.Get_buffer().erase(0, pos + 2);
+            //client.Get_buffer().clear();
             std::vector<std::string> command = split(trimString(command_str), ' ');
 
             std::cout << GREEN << "Received: " << RESET << command_str;
