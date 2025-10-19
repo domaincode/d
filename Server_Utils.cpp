@@ -96,15 +96,13 @@ void Server::removeClient(int client_fd)
     close(client_fd);
     _clients.erase(client_it);
 
-    for (size_t i = 1; i < _fds.size(); i++)
+    for(std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); it++)
     {
-        if (_fds[i].fd == client_fd)
+        if(it->fd == client_fd)
         {
-  //         _fds[i].fd *= -1;
-            if(_fds.size() > 2)
-                std::swap(_fds[i], *(_fds.end()--));
-            _fds.pop_back();
+            _fds.erase(it);
             break;
         }
     }
+
 }

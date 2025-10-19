@@ -32,6 +32,7 @@ std::pair<int, std::string> parse_args(char **av)
 
 void ft_do(int sig)
 {
+    (void) sig;
      Server::EXIT_FLAG = 1;
 }
 

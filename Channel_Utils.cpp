@@ -36,10 +36,8 @@ std::string Channel::getAllUsersNames(std::map<int, Client>& _clients)
 
         std::map<int, Client>::iterator it = _clients.find(client_fd);
 
-            // kat ban li ra zayda ???? 
-
-        // if (it == _clients.end())
-        //     continue;
+        if (it == _clients.end())
+            continue;
 
         if (isOperator(client_fd))
             result += "@" + it->second.Get_nickname() + " ";

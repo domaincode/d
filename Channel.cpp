@@ -3,12 +3,10 @@
 
 Channel::~Channel()
 {
-    // std::cout << "Channel Destructor Called\n";
 }
 
 Channel::Channel()
 {
-    //std::cout << "Channel Default Constructor Called\n";
 }
 
 
@@ -20,8 +18,6 @@ Channel::Channel(std::string& Channel_name, std::string& key)
     _topicLock = false;
     _userLimit = 0;
     _creationDate = getCurrTime();
-
-    //std::cout << "Channel ARGS Constructor Called\n";
 }
 
 void Channel::addClient(int& client_fd)
@@ -43,13 +39,10 @@ void Channel::addInvited(int& fd)
 
 void Channel::removeOperator(int& client_fd)
 {
-    if(_operators.size() != 1)
-    {
-        std::vector<int>::iterator it;
-        it = std::find(_operators.begin(), _operators.end(), client_fd);
-        std::swap(*it, *(_operators.end()--));
-    }
-    _operators.pop_back();
+    std::vector<int>::iterator it;
+    it = std::find(_operators.begin(), _operators.end(), client_fd);
+	if (it != _operators.end())
+		_operators.erase(it);
 
 }
 
@@ -67,10 +60,6 @@ bool Channel::removeClientFromChannel(int client_fd)
     }
     return false;
 }
-
-
-
-/// Channel Getters
 
 std::string& Channel::Get_topicDate()
 {

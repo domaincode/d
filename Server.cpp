@@ -4,13 +4,11 @@ int Server::EXIT_FLAG = 0;
 
 Server::~Server()
 {
-    std::cout << "Server Destructor Called\n";
     cleanup();
 }
 
 Server::Server(int port, std::string pass)
 {
-    //std::cout << "Server Constructor Called\n";
     this->_port = port;
     this->_password = pass;
     char hostBuffer[256];
@@ -24,10 +22,7 @@ void Server::Start()
 {
     listen_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
     if(listen_fd < 0)
-    {
-        std::cout << "Error: Func ==> Socket\n";
-        exit(1);
-    }
+        throw std::runtime_error("Failed to open socket ");
     sAddress.sin_family = AF_INET;
     sAddress.sin_port = htons(_port);
     sAddress.sin_addr.s_addr = INADDR_ANY;
@@ -45,7 +40,7 @@ void Server::Start()
     fd.events = POLLIN;
     fd.fd = listen_fd;
     _fds.push_back(fd);
-    // launchBOT();
+    //launchBOT();
 
     Use_Poll();
 
@@ -59,15 +54,14 @@ void Server::Use_Poll()
     {
         if(Server::EXIT_FLAG == 1)
             break;
-        std::cout << "================Poll: Start========================================\n";
+     //   std::cout << "Poll Start\n";
         j = poll(_fds.data(), _fds.size(), -1);
         if(j == -1)
         {
             continue;
         }
-        std::cout << "Reads Available: " << j << std::endl;
-        std::cout << "================Poll: End========================================\n";
         Check_IandO();
+   //     std::cout << "Poll End\n";
 
 }
 
@@ -84,9 +78,7 @@ void Server::Check_IandO()
     {
          if(_fds[i].revents == POLLIN)
         {
-             std::cout << "================Communication: Start========================================\n";
             Handle_ClientRequest(_clients[_fds[i].fd]);
-            std::cout << "================Communication: End========================================\n";
         }
     }
 }
@@ -102,6 +94,7 @@ void Server::Accept_NewClient()
         fd.fd = accept(listen_fd, (sockaddr* )&clientAddress, &Address_size);
         if(fd.fd < 0)
             return;
+        std::cout << GREEN << "New Client is Connecting: " << RESET << fd.fd << std::endl;
         fcntl(fd.fd, F_SETFL, O_NONBLOCK); 
 
         _fds.push_back(fd);
@@ -109,7 +102,6 @@ void Server::Accept_NewClient()
 
         new_client.Get_ip() = inet_ntoa(clientAddress.sin_addr);
         _clients[fd.fd] = new_client;
-         std::cout << "Server have: " << _clients.size() << " Clients."<< std::endl;
 }
 
 
@@ -117,7 +109,6 @@ void Server::Handle_ClientRequest(Client& client)
 {
      char buffer[BUFFER_SIZE + 1];
     int bytes_read = recv(client.Get_fd(), buffer, BUFFER_SIZE, 0);
-
     if (bytes_read == 0)
     {
         std::cout << RED << "Client Disconnected: " << RESET << client.Get_fd() << "\n";
