@@ -30,40 +30,16 @@ std::pair<int, std::string> parse_args(char **av)
 }
 
 
+void ft_do(int sig)
+{
+     Server::EXIT_FLAG = 1;
+}
 
 
 int main(int argc, char** argv)
 {
 
-    // std::map<int, std::string> array;
-
-    // std::map<int, std::string>::iterator it;
-    // std::map<int, std::string>::iterator tmp;
-
-    // array[1] = "kamal";
-    // array[2] = "test";
-    // array[3] = "Hello world";
-
-    // it = array.find(2);
-    // tmp = it;
-    // tmp++;
-    // array.erase(it);
-
-
-    // if(it == array.end())
-    // {
-    //     std::cout << "END OF MAP\n";
-    // }
-    // std::cout << it->second << std::endl;
-    // std::cout << tmp->second  << std::endl;
-
-    // std::cout << "start\n";
-
-    // for(std::map<int, std::string>::iterator it = array.begin(); it != array.end(); it++)
-    // {   
-    //     std::cout << it->second << std::endl;
-    // }
-
+    signal(SIGINT, ft_do);
     if (argc != 3)
     {
         std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;

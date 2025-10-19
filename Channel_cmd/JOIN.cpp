@@ -72,7 +72,6 @@ void Server::joinCommand(std::string channelName, std::string key, Client &clien
     else
     {
         Channel &currChannel = it->second;
-        //std::cout << "invite only: " << currChannel.Get_inviteOnly() << std::endl;
         if (currChannel.Get_inviteOnly() && !currChannel.isInvited(client.Get_fd()))
         {
             client.sendReply(ERR_INVITEONLYCHAN(client.Get_nickname(), channelName));
@@ -85,7 +84,7 @@ void Server::joinCommand(std::string channelName, std::string key, Client &clien
             return;
         }
 
-        if (currChannel.Get_key() != key)
+        if (!currChannel.isInvited(client.Get_fd()) && currChannel.Get_key() != key)
         {
             client.sendReply(ERR_BADCHANNELKEY(client.Get_nickname(), client.Get_hostname(), channelName));
             return;

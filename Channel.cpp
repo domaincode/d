@@ -3,12 +3,12 @@
 
 Channel::~Channel()
 {
-    std::cout << "Channel Destructor Called\n";
+    // std::cout << "Channel Destructor Called\n";
 }
 
 Channel::Channel()
 {
-    std::cout << "Channel Default Constructor Called\n";
+    //std::cout << "Channel Default Constructor Called\n";
 }
 
 
@@ -21,7 +21,7 @@ Channel::Channel(std::string& Channel_name, std::string& key)
     _userLimit = 0;
     _creationDate = getCurrTime();
 
-    std::cout << "Channel ARGS Constructor Called\n";
+    //std::cout << "Channel ARGS Constructor Called\n";
 }
 
 void Channel::addClient(int& client_fd)
@@ -43,10 +43,6 @@ void Channel::addInvited(int& fd)
 
 void Channel::removeOperator(int& client_fd)
 {
-	//std::set<int>::iterator it;
-	// it = _operators.find(client_fd);
-	// if (it != _operators.end())
-	// 	_operators.erase(it);
     if(_operators.size() != 1)
     {
         std::vector<int>::iterator it;

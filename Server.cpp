@@ -1,13 +1,16 @@
 #include "Server.hpp"
 
+int Server::EXIT_FLAG = 0;
+
 Server::~Server()
 {
     std::cout << "Server Destructor Called\n";
+    cleanup();
 }
 
 Server::Server(int port, std::string pass)
 {
-    std::cout << "Server Constructor Called\n";
+    //std::cout << "Server Constructor Called\n";
     this->_port = port;
     this->_password = pass;
     char hostBuffer[256];
@@ -54,24 +57,17 @@ void Server::Use_Poll()
   
     while(true)
     {
-        //must set all the pollfd members 
+        if(Server::EXIT_FLAG == 1)
+            break;
         std::cout << "================Poll: Start========================================\n";
         j = poll(_fds.data(), _fds.size(), -1);
         if(j == -1)
         {
-            std::cout << "error: in poll\n";
-            exit(0);
+            continue;
         }
-        else
-        {
-            std::cout << "Reads available: " << j << std::endl;
-        }
+        std::cout << "Reads Available: " << j << std::endl;
         std::cout << "================Poll: End========================================\n";
         Check_IandO();
-
-        //delete
-        if(_fds.size() == 14)
-            break;
 
 }
 
@@ -84,16 +80,12 @@ void Server::Check_IandO()
     {
         Accept_NewClient();
     }
-    //Handle Client Request
     for(unsigned int i = 1; i < _fds.size(); i++)
     {
-        if(_fds[i].revents == POLLIN)
+         if(_fds[i].revents == POLLIN)
         {
-            std::cout << "================Communication: Start========================================\n";
-            std::cout << "Client n: " << _fds[i].fd << std::endl;
-           // std::cout << "size of map " << clients.size() << std::endl;
+             std::cout << "================Communication: Start========================================\n";
             Handle_ClientRequest(_clients[_fds[i].fd]);
-            //Start_communication(clients[_fds[i].fd]);
             std::cout << "================Communication: End========================================\n";
         }
     }
@@ -101,38 +93,23 @@ void Server::Check_IandO()
 
 void Server::Accept_NewClient()
 {
-        //New Client in the queue ???
         sockaddr_in clientAddress;
         socklen_t Address_size = sizeof(clientAddress);
         pollfd fd;
         memset(&fd, 0, sizeof(fd));
         fd.events = POLLIN;
-        //POLLIN
 
         fd.fd = accept(listen_fd, (sockaddr* )&clientAddress, &Address_size);
-        std::cout << "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\Accept: " << fd.fd << " is connecting.\n";
         if(fd.fd < 0)
-        {
-            std::cout << "Error: in accept\n";
-            exit(1);
-        }
+            return;
+        fcntl(fd.fd, F_SETFL, O_NONBLOCK); 
 
-        // Must be check: the preiveus flags for socket ????? New client Flags ??
-        fcntl(fd.fd, F_SETFL, O_NONBLOCK); //fcntl Non Blocking I/O
-
-        //add the new client to the array for monitoring
         _fds.push_back(fd);
         Client new_client(fd.fd, this);
 
-        // Client must have Default Constructor
         new_client.Get_ip() = inet_ntoa(clientAddress.sin_addr);
         _clients[fd.fd] = new_client;
          std::cout << "Server have: " << _clients.size() << " Clients."<< std::endl;
-      
-
-
-
-
 }
 
 
@@ -140,11 +117,10 @@ void Server::Handle_ClientRequest(Client& client)
 {
      char buffer[BUFFER_SIZE + 1];
     int bytes_read = recv(client.Get_fd(), buffer, BUFFER_SIZE, 0);
-    std::cout << "bytes read: " << bytes_read << std::endl;
 
     if (bytes_read == 0)
     {
-        std::cout << "Client disconnected." << std::endl;
+        std::cout << RED << "Client Disconnected: " << RESET << client.Get_fd() << "\n";
         removeClient(client.Get_fd());
     }
     else
@@ -160,9 +136,6 @@ void Server::Handle_ClientRequest(Client& client)
             std::string command_str = client.Get_buffer().substr(0, pos + delim_len);
 
             client.Get_buffer().erase(0, pos + delim_len);
-            //std::string command_str = client.Get_buffer();
-            //client.Get_buffer().erase(0, pos + 2);
-            //client.Get_buffer().clear();
             std::vector<std::string> command = split(trimString(command_str), ' ');
 
             std::cout << GREEN << "Received: " << RESET << command_str;

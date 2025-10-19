@@ -17,6 +17,7 @@
 
 #include <poll.h>
 #include <exception>
+#include <signal.h>
 
 
 
@@ -27,6 +28,7 @@ class Client;
 class Server
 {
     private:
+
         std::string _password; 
         int _port;
         std::string _hostname;
@@ -38,6 +40,7 @@ class Server
 
 
     public:
+            static int EXIT_FLAG;
         Server(int port, std::string pass);
         ~Server();
         void Start();
@@ -53,7 +56,7 @@ class Server
         void Handle_ClientRequest(Client& client);
         void removeClient(int client_fd);
         void launchBOT();
-        // void cleanup();
+        void cleanup();
 
 
         //channel commands

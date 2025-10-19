@@ -13,6 +13,7 @@
 
 #define BUFFER_SIZE 512
 #define GREEN "\033[1;32m"
+#define RED "\033[1;31m"
 #define RESET "\033[0m"
 
 

@@ -1,16 +1,16 @@
 #include "Server.hpp"
 
-// void Server::cleanup()
-// {
-//     for (int i = 1; i < _client_count; i++)
-//         removeClient(fds[i].fd);
+void Server::cleanup()
+{
+    for(std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
+    {
+        std::cout << "CLEANUP: " << it->first << std::endl;
+        close(it->first);
+    }
 
-//     if (_server_fd != -1)
-//         close(_server_fd);
-
-//     _clients.clear();
-//     _channels.clear();
-// }
+    if(listen_fd > 0)
+        close(listen_fd);
+}
 
 
 Server& Client::Get_serverObject()

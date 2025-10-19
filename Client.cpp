@@ -4,7 +4,7 @@
 Client::Client()
 {
     char hostname[100];
-    std::cout << "Default Constructor Client Called\n";
+    // std::cout << "Default Constructor Client Called\n";
     if(gethostname(hostname, 100) < 0)
         _hostname = "localhost";
     else
@@ -13,12 +13,15 @@ Client::Client()
 
 }
 
-Client::~Client(){ std::cout << "Destructor Client Called\n";}
+Client::~Client()
+{ 
+    // std::cout << "Destructor Client Called";
+}
     
 
 Client::Client(int fd,  Server* server)
 {
-    std::cout << "Parameter Constructor Client Called\n";
+    // std::cout << "Parameter Constructor Client Called\n";
     this->_fd = fd;
     this->_server = server;
     this->is_authenticated = false;
@@ -29,7 +32,7 @@ Client::Client(int fd,  Server* server)
 
 Client::Client(const Client& other)
 {
-    std::cout << "Copy constructor Client Called\n";
+   // std::cout << "Copy constructor Client Called\n";
     *this = other;
 }
 
@@ -37,7 +40,7 @@ Client::Client(const Client& other)
 
 Client& Client::operator=(const Client& other)
 {
-    std::cout << "Assignement operator Client Called\n";
+   // std::cout << "Assignement operator Client Called\n";
 
     if(this == &other)
     {
