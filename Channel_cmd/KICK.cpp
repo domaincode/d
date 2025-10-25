@@ -6,7 +6,6 @@ std::string getReason(const std::vector<std::string> &command)
 
     if (command.size() < 3)
     {
-        //????????????? must be command.size() == 3
         return "";
     }
     std::string result;
@@ -18,7 +17,6 @@ std::string getReason(const std::vector<std::string> &command)
         }
         result += command[i];
     }
-    ///result empty ??? 
     if (!result.empty() && result[0] == ':')
     {
         result = result.substr(1);
@@ -79,7 +77,6 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
 
     int client_fd = Get_ClientFdByName(nickname);
 
-    //if fd = -1 ?? targetClient pointer will be point to an actual object not NULL
     Client *targetClient = &_clients[client_fd];
     if (!targetClient || !targetClient->isFullyAuthenticated())
     {
@@ -95,7 +92,6 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
 
     if (!currChannel.removeClientFromChannel(targetClient->Get_fd()))
         return;
-   // currChannel.removeClientFromChannel(targetClient->Get_fd());
 
     std::string message = RPL_KICK(currClient.Get_nickname(), currClient.Get_hostname(), currClient.Get_hostname(), nickname, channelName, reason);
 
@@ -115,10 +111,8 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
         {
             int newOperatorFd = clients[0];
             currChannel.addOperator(newOperatorFd);
-            //_sendReply(newOperatorFd, RPL_YOUREOPER(_clients[newOperatorFd].Get_nickname()));
 
             _clients[newOperatorFd].sendReply(RPL_YOUREOPER(_clients[newOperatorFd].Get_nickname()));
-           // currChannel.broadcastMessage(RPL_OPERCHANGE(_clients[newOperatorFd].Get_nickname()), _clients);
         }
     }
 }

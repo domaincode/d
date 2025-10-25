@@ -32,13 +32,6 @@ std::string& Client::Get_nickname()
 
 void Client::sendReply(std::string response)
 {
-  //  (void)response;
-
-    if(_fd < 0)
-    {
-        std::cout << "error in fd\n";
-        exit(1);
-    }
     send(_fd, response.c_str(), response.length(), 0);
 }
 

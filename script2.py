@@ -8,7 +8,7 @@ CHANNEL = "#stress"
 NUM_CLIENTS = 10000     # how many fake clients to create
 COMMAND_DELAY = 0.05   # delay after each IRC command
 CONNECT_DELAY = 0.01   # delay between creating clients
-NUM_MESSAGES = 2       # <-- each client will send exactly 4 messages
+NUM_MESSAGES = 4      # <-- each client will send exactly 4 messages
 MESSAGE_INTERVAL = 2   # seconds between each message
 KEEP_ALIVE_INTERVAL = 60  # seconds, loop sleep after sending messages
 

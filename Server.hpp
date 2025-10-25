@@ -43,7 +43,7 @@ class Server
 
 
     public:
-            static int EXIT_FLAG;
+        static int EXIT_FLAG;
         Server(int port, std::string pass);
         ~Server();
         void Start();

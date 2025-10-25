@@ -58,11 +58,6 @@ void Server::joinCommand(std::string channelName, std::string key, Client &clien
         client.sendReply(message);
         if (newChannel.Get_topic() == "")
             client.sendReply(RPL_NOTOPIC(client.Get_hostname(), client.Get_nickname(), channelName));
-        // else
-        // {
-        //     client.sendReply(RPL_TOPIC(client.Get_hostname(), client.Get_nickname(), channelName, newChannel.Get_topic()));
-        //     client.sendReply(RPL_TOPICWHOTIME(client.Get_nickname(), channelName, newChannel.Get_topicSetter(), newChannel.Get_topicDate()));
-        // }
         std::cout << "start\n";
         std::cout << newChannel.getAllUsersNames(_clients);
         std::cout << "end\n";
@@ -95,9 +90,7 @@ void Server::joinCommand(std::string channelName, std::string key, Client &clien
             client.sendReply(ERR_USERONCHANNEL(client.Get_hostname(), client.Get_nickname(), client.Get_nickname(), channelName));
             return;
         }
-        //////must be removed from the invite only list ???
         currChannel.addClient(client.Get_fd());
-        std::cout << "Client Added: " << client.Get_nickname() << std::endl;
         std::string message = RPL_JOIN(client.Get_nickname(), client.Get_username(), channelName, client.Get_ip());
         currChannel.broadcastMessage(message, _clients);
         if (currChannel.Get_topic() == "")
@@ -120,11 +113,6 @@ void Server::ChannelJoin(Client &client, std::vector<std::string> command)
         return;
     }
     std::map<std::string, std::string> tokens = parseJoinCommand(command);
-    // if (tokens.size() == 0)
-    // {
-    //     client.sendReply(ERR_NEEDMOREPARAMS(client.Get_nickname(), client.Get_hostname(), command[0]));
-    //     return;
-    // }
 
     std::map<std::string, std::string>::iterator it;
     for (it = tokens.begin(); it != tokens.end(); it++)

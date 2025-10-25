@@ -32,7 +32,6 @@ void Client::UserCommand(std::vector<std::string> command)
     _username = username;
     _servername = servername;
     _fullname = fullname;
-    // _registered = true;
     _authStatus |= 0x04;
 
     if (_authStatus == 0x07)

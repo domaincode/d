@@ -4,6 +4,7 @@ int Server::EXIT_FLAG = 0;
 
 Server::~Server()
 {
+    std::cout << "Server Destructor Called\n";
     cleanup();
 }
 
@@ -41,29 +42,22 @@ void Server::Start()
     fd.events = POLLIN;
     fd.fd = listen_fd;
     _fds.push_back(fd);
-    //launchBOT();
-
     Use_Poll();
 
 }
 
 void Server::Use_Poll()
 {
-    int j;
+    int poll_reads;
   
     while(!Server::EXIT_FLAG)
     {
-     //   std::cout << "Poll Start\n";
-        j = poll(_fds.data(), _fds.size(), -1);
-        if(j == -1)
+        poll_reads = poll(_fds.data(), _fds.size(), -1);
+        if(poll_reads == -1)
         {
-            std::cout << "Error in poll\n";
-            //exit(1);
             continue;
         }
         Check_IandO();
-   //     std::cout << "Poll End\n";
-
 }
 
 }
@@ -76,7 +70,7 @@ void Server::Check_IandO()
         Accept_NewClient();
     }
     else{
-                for(unsigned int i = 1; i < _fds.size(); i++)
+    for(unsigned int i = 1; i < _fds.size(); i++)
     {
          if(_fds[i].revents == POLLIN)
         {
@@ -118,7 +112,7 @@ void Server::Handle_ClientRequest(Client& client)
     }
     else
     {
-        //buffer[bytes_read] = 0;
+        buffer[bytes_read] = 0;
         client.Get_buffer().append(buffer, bytes_read);
         size_t pos;
         while (((pos = client.Get_buffer().find("\r\n")) != std::string::npos) || ((pos = client.Get_buffer().find("\n")) != std::string::npos))
@@ -154,8 +148,6 @@ void Server::Handle_ClientRequest(Client& client)
                 else if (command[0] == "SECBOT")
                     BotCommand(client.Get_fd(), command);
             }
-
-
         }
     }
 
