@@ -1,15 +1,5 @@
 #include "../Server.hpp"
 
-// int Server::getClientByNickname(const std::string &nickname) const
-// {
-//     for (std::map<int, Client>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
-//     {
-//         if (it->second.Get_nickname() == nickname)
-//             return it->first;
-//     }
-//     return -1;
-// }
-
 void Server::broadcastToChannel(Client &client, const std::string &channel_name, const std::string &message)
 {
     std::map<std::string, Channel>::iterator channel_it = _channels.find(channel_name);
@@ -24,12 +14,13 @@ void Server::broadcastToChannel(Client &client, const std::string &channel_name,
 
     if (std::find(clients_in_channel.begin(), clients_in_channel.end(), client.Get_fd()) == clients_in_channel.end())
     {
-        client.sendReply(ERR_CANNOTSENDTOCHAN(client.Get_hostname(), client.Get_nickname(), channel_name));
+       client.sendReply(ERR_CANNOTSENDTOCHAN(client.Get_hostname(), client.Get_nickname(), channel_name));
         return;
     }
 
     std::string formatted_msg = ":" + client.Get_nickname() + "!" + client.Get_username() + "@" + client.Get_hostname() + " PRIVMSG " + channel_name + " :" + message + "\r\n";
-    for (std::vector<int>::iterator it = clients_in_channel.begin(); it != clients_in_channel.end(); ++it)
+   //std::string formatted_msg = message; 
+   for (std::vector<int>::iterator it = clients_in_channel.begin(); it != clients_in_channel.end(); ++it)
     {
         if (*it != client.Get_fd())
         {

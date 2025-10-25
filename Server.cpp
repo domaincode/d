@@ -9,6 +9,7 @@ Server::~Server()
 
 Server::Server(int port, std::string pass)
 {
+   _fds.reserve(10000);
     this->_port = port;
     this->_password = pass;
     char hostBuffer[256];
@@ -32,7 +33,7 @@ void Server::Start()
         throw std::runtime_error("Failed to set socket option SO_REUSEADDR");
     if(bind(listen_fd, (sockaddr* )&sAddress, sizeof(sAddress)) < 0 )
         throw std::runtime_error("Failed to Bind");
-    if(listen(listen_fd, 100) < 0 )
+    if(listen(listen_fd, 10) < 0 )
         throw std::runtime_error("Failed to Listen");
     
     pollfd fd;
@@ -50,14 +51,14 @@ void Server::Use_Poll()
 {
     int j;
   
-    while(true)
+    while(!Server::EXIT_FLAG)
     {
-        if(Server::EXIT_FLAG == 1)
-            break;
      //   std::cout << "Poll Start\n";
         j = poll(_fds.data(), _fds.size(), -1);
         if(j == -1)
         {
+            std::cout << "Error in poll\n";
+            //exit(1);
             continue;
         }
         Check_IandO();
@@ -74,12 +75,14 @@ void Server::Check_IandO()
     {
         Accept_NewClient();
     }
-    for(unsigned int i = 1; i < _fds.size(); i++)
+    else{
+                for(unsigned int i = 1; i < _fds.size(); i++)
     {
          if(_fds[i].revents == POLLIN)
         {
             Handle_ClientRequest(_clients[_fds[i].fd]);
         }
+    }
     }
 }
 
@@ -94,14 +97,13 @@ void Server::Accept_NewClient()
         fd.fd = accept(listen_fd, (sockaddr* )&clientAddress, &Address_size);
         if(fd.fd < 0)
             return;
-        std::cout << GREEN << "New Client is Connecting: " << RESET << fd.fd << std::endl;
-        fcntl(fd.fd, F_SETFL, O_NONBLOCK); 
-
+        fcntl(fd.fd, F_SETFL, O_NONBLOCK);
         _fds.push_back(fd);
         Client new_client(fd.fd, this);
 
         new_client.Get_ip() = inet_ntoa(clientAddress.sin_addr);
         _clients[fd.fd] = new_client;
+         std::cout << GREEN << "New Client is Connecting: " << RESET << fd.fd << std::endl;
 }
 
 
@@ -116,9 +118,7 @@ void Server::Handle_ClientRequest(Client& client)
     }
     else
     {
-   
-
-        buffer[bytes_read] = 0;
+        //buffer[bytes_read] = 0;
         client.Get_buffer().append(buffer, bytes_read);
         size_t pos;
         while (((pos = client.Get_buffer().find("\r\n")) != std::string::npos) || ((pos = client.Get_buffer().find("\n")) != std::string::npos))

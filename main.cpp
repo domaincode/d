@@ -40,6 +40,9 @@ void ft_do(int sig)
 int main(int argc, char** argv)
 {
 
+    // (void) argc;
+    // (void)argv;
+
     signal(SIGINT, ft_do);
     if (argc != 3)
     {
@@ -57,6 +60,22 @@ int main(int argc, char** argv)
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
+
+    // std::string name;
+    // std::string test;
+
+    // name.reserve(1000);
+    // //test = name;
+
+    // std::cout << name.capacity() << std::endl;
+    // std::cout << name.size() << std::endl;
+    // name.clear();
+    //     std::cout << name.capacity() << std::endl;
+    // std::cout << name.size() << std::endl;
+    //         std::cout << test.capacity() << std::endl;
+    // std::cout << test.size() << std::endl;
+
+
 
     return 0;
     

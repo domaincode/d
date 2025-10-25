@@ -1,37 +1,5 @@
 #include "Server.hpp"
 
-void Server::launchBOT()
-{
-    int bot_fd = socket(AF_INET, SOCK_STREAM | O_NONBLOCK, 0);
-
-    if (bot_fd < 0)
-    {
-        return;
-    }
-
-    if (connect(bot_fd, (sockaddr *)&sAddress, sizeof(sAddress)) < 0)
-    {
-        close(bot_fd);
-        return;
-    }
-
-    Client botClient(bot_fd, this);
-
-    botClient.Get_nickname() = "SECBOT";
-    botClient.Get_username() = "SECBOT";
-    botClient.Get_ip() = _hostname;
-    botClient.Get_fullname() = "SECBOT";
-    botClient.Get_authStatus() = 0x07;
-
-    // _clients[bot_fd] = botClient;
-    // pollfd fd;
-    // memset(&fd, 0, sizeof(fd));
-    // fd.events = POLLIN;
-    // fd.fd = bot_fd;
-    // _fds.push_back(fd);
-
-}
-
 void webPath(Client &client,std::string server_hostname)
 {
     std::string sender = "SECBOT";

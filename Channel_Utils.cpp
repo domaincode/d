@@ -18,11 +18,14 @@ bool Channel::isInvited(int& client_fd)
 
 bool Channel::isOperator(int& client_fd)
 {
-    for(size_t i = 0; i < _operators.size(); i++)
-    {
-        if(client_fd == _operators.at(i))
-            return true;
-    }
+    std::vector<int>::iterator it = std::find(_operators.begin(), _operators.end(), client_fd);
+
+    return (it != _operators.end());
+    // for(size_t i = 0; i < _operators.size(); i++)
+    // {
+    //     if(client_fd == _operators.at(i))
+    //         return true;
+    // }
     return false;
 }
 
