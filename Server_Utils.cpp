@@ -1,45 +1,20 @@
 #include "Server.hpp"
 
-// void Server::cleanup()
-// {
-//     for(std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
-//     {
-//         std::cout << "CLEANUP: " << it->first << std::endl;
-//         close(it->first);
-//     }
-
-//     if(listen_fd > 0)
-//         close(listen_fd);
-// }
-
-
 void Server::cleanup()
 {
-   // std::cout
-    for(std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-        try {
-            close(it->first);
-        } catch (...) {
-            std::cout << "Clean up Catch\n";
-            // Ignore errors during cleanup
-        }
+    for(std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
+    {
+        close(it->first);
     }
-    _clients.clear();
-    _channels.clear();
-    _fds.clear();
-    
-    if(listen_fd > 0) {
+
+    if(listen_fd > 0)
         close(listen_fd);
-        listen_fd = -1;
-    }
 }
 
-
-Server& Client::Get_serverObject()
+std::string& Server::Get_hostname()
 {
-    return *_server;
+    return _hostname;
 }
-
 
 std::string& Server::Get_password()
 {

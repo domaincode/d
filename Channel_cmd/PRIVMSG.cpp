@@ -3,12 +3,6 @@
 void Server::broadcastToChannel(Client &client, const std::string &channel_name, const std::string &message)
 {
     std::map<std::string, Channel>::iterator channel_it = _channels.find(channel_name);
-    // if (channel_it == _channels.end())
-    // {
-    //     client.sendReply(ERR_NOSUCHCHANNEL(client.Get_hostname(), client.Get_nickname(), channel_name));
-    //     return;
-    // }
-
     Channel &channel = channel_it->second;
     std::vector<int> &clients_in_channel = channel.Get_users();
 
@@ -39,7 +33,6 @@ void Server::sendToClient(const std::string &target_nick, Client &client, const 
     if (target_fd != -1 && _clients[target_fd].isFullyAuthenticated())
     {
         std::string formatted_msg = PRIVMSG_FORMAT(client.Get_nickname(), client.Get_username(), client.Get_hostname(), target_nick, message);
-        //sendReply(target_fd, formatted_msg);
         _clients[target_fd].sendReply(formatted_msg);
     }
     else

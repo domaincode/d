@@ -10,7 +10,6 @@ Server::~Server()
 
 Server::Server(int port, std::string pass)
 {
-   _fds.reserve(10000);
     this->_port = port;
     this->_password = pass;
     char hostBuffer[256];
@@ -150,8 +149,6 @@ void Server::Handle_ClientRequest(Client& client)
             }
         }
     }
-
-    
 }
 
 

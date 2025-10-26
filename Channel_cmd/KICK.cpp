@@ -76,8 +76,8 @@ void Server::kickCommand(Client &currClient, std::string &channelName, std::stri
     }
 
     int client_fd = Get_ClientFdByName(nickname);
+    Client *targetClient = (client_fd == -1 ? NULL : &_clients[client_fd]);
 
-    Client *targetClient = &_clients[client_fd];
     if (!targetClient || !targetClient->isFullyAuthenticated())
     {
         currClient.sendReply(ERR_NOSUCHNICK(currClient.Get_hostname(), currClient.Get_nickname(), nickname));

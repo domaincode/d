@@ -4,9 +4,8 @@ bool isValidChannelName(const std::string &name)
 {
 	if (name.empty() || (name[0] != '#' && name[0] != '&'))
 		return false;
-	// if (name.find(',') != std::string::npos)
-	// 	return false;
-	return name.length() <= 200;
+
+	return name.length() <= 100;
 }
 
 
@@ -16,8 +15,6 @@ std::map<std::string, std::string> parseJoinCommand(std::vector<std::string> com
 	std::vector<std::string> keys;
 	std::vector<std::string> channelsNames;
 
-	// if (command.size() >= 2)
-	// {
 		channelsNames = split(command[1], ',');
 		if (command.size() >= 3)
 		{
@@ -35,14 +32,12 @@ std::map<std::string, std::string> parseJoinCommand(std::vector<std::string> com
 				tokens[channelsNames[i]] = "";
 			}
 		}
-	// }
 
 	return tokens;
 }
 
 void Server::joinCommand(std::string channelName, std::string key, Client &client)
 {
-    //int client_fd = client.Get_fd();
     std::map<std::string, Channel>::iterator it;
     it = _channels.find(channelName);
     if (it == _channels.end())

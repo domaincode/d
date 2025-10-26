@@ -25,7 +25,7 @@ void Client::sendWelcomeMessages()
     welcome_msg.push_back("✦ Username: " + Get_username());
     welcome_msg.push_back("✦ Hostname: " + Get_hostname());
     welcome_msg.push_back("【Server Information】");
-    welcome_msg.push_back("⚡ Server: " + _hostname );
+    welcome_msg.push_back("⚡ Server: " + _server->Get_hostname());
     welcome_msg.push_back("⚡ Connected: " + datetime);
     for (size_t i = 0; i < welcome_msg.size(); i++)
         sendReply(": 001 " + Get_nickname() + " : " + welcome_msg[i] + "\r\n");

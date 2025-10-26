@@ -21,7 +21,6 @@ class Server;
 class Client
 {
     private:
-        Server* _server;
         bool is_authenticated;
 
         int _fd;
@@ -34,17 +33,11 @@ class Client
 
         int _authStatus;
         int _nickFlag;
-        //bool _registered;
-
-
-        
-
-
-
         std::string _buffer;
         
 
     public:
+        Server* _server;
         Client();
         ~Client();
         Client(int fd, Server* server);
@@ -64,9 +57,6 @@ class Client
         int& Get_authStatus();
         int& Get_nickFlag();
 
-        Server& Get_serverObject();
-
-
         //Auth commands
         void sendReply(std::string response);
         void sendWelcomeMessages();
@@ -80,7 +70,6 @@ class Client
 };
 
 std::vector<std::string> split(const std::string &str, char delimiter);
-
 std::string trimString(const std::string &input);
 
 

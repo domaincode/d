@@ -19,11 +19,6 @@
 #include <exception>
 #include <signal.h>
 
-#include <errno.h>
-
-
-
-
 
 class Channel;
 class Client;
@@ -52,13 +47,13 @@ class Server
         std::string& Get_password();
         int Get_ClientFdByName(const std::string &nickname);
         std::map<int, Client>& Get_clients_array();
+        std::string& Get_hostname();
 
         void Use_Poll();
         void Check_IandO();
         void Accept_NewClient();
         void Handle_ClientRequest(Client& client);
         void removeClient(int client_fd);
-        void launchBOT();
         void cleanup();
 
 
@@ -73,11 +68,6 @@ class Server
         void PrivMsgCommand(Client &client, std::vector<std::string> command, std::string &buffer);
         void broadcastToChannel(Client &client, const std::string &channel_name, const std::string &message);
         void sendToClient(const std::string &target_nick, Client &client, const std::string &message);
-
-
-
-
-
 
         //Mode command
         void pluskModeParam(Channel &currChannel, const std::string &parameter, Client &currClient);
@@ -112,11 +102,4 @@ bool allParamEmpty(std::vector<std::string> parameters, std::vector<std::string>
 
 int ft_atoi(std::string parameter);
 bool isValidNumber(const std::string &number);
-
-
-
-
-
-
-
 #endif

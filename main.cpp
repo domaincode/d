@@ -32,15 +32,13 @@ std::pair<int, std::string> parse_args(char **av)
 
 void ft_do(int sig)
 {
-    (void) sig;
+   (void) sig;
      Server::EXIT_FLAG = 1;
 }
 
 
 int main(int argc, char** argv)
 {
-
-
     signal(SIGINT, ft_do);
     signal(SIGPIPE, ft_do);
     if (argc != 3)

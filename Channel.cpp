@@ -1,14 +1,8 @@
 #include "Channel.hpp"
 
 
-Channel::~Channel()
-{
-}
-
-Channel::Channel()
-{
-}
-
+Channel::~Channel(){}
+Channel::Channel(){}
 
 Channel::Channel(std::string& Channel_name, std::string& key)
 {
@@ -155,12 +149,3 @@ void Channel::Set_topicLock(bool status)
 {
     _topicLock = status;
 }
-
-
-
-
-
-
-
-
-
